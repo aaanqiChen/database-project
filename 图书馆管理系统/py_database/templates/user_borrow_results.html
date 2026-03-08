@@ -1,0 +1,13 @@
+<div class="user_borrow_results">
+    <h2>用户借阅记录</h2>
+    <ul id="borrow-list">
+        {% for record in borrow_result %}
+        <li>
+            <span>书名: {{ record.book_name }} </span>
+            <span>借阅日期: {{ record.borrow_date }} </span>
+            <span>应还日期: {{ record.due_date }} </span>
+            <span>借阅状态: {{ record.state }} </span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

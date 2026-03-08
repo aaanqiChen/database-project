@@ -1,0 +1,26 @@
+<div class="user_borrow_book">
+    <h3>按用户查</h3>
+    <form id="user-borrow-form">
+        <label for="user_id">用户ID：</label>
+        <input type="text" id="user_id" name="user_id" required><br>
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="borrow-result"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#user-borrow-form').on('submit', function (e) {
+            e.preventDefault(); // 阻止表单的默认提交行为
+
+            var userId = $('#user_id').val(); // 获取用户输入的用户ID
+
+            // 发送AJAX请求到后端
+            $.post('/search_borrow', { userId: userId }, function (data) {
+                $('#borrow-result').html(data); // 将返回的数据显示在结果区域
+            }).fail(function () {
+                alert('请求失败，请重试。'); // 错误处理
+            });
+        });
+    });
+</script>

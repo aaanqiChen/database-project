@@ -1,0 +1,11 @@
+<div class="user_results">
+    <h2>用户信息</h2>
+    <ul id="user-list">
+        {% for record in users_result %}
+        <li>
+            <span>用户名: {{ record.user_name }} </span>
+            <span>用户ID: {{ record.user_id }} </span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

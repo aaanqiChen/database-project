@@ -1,0 +1,44 @@
+<div class="remove-user">
+    <h3>删减用户</h3>
+    <form id="removeUserForm">
+        <label for="user_id">用户ID：</label>
+        <input type="text" id="user_id" name="user_id" required><br>
+        <button type="submit">删减</button>
+    </form>
+    <div id="removeResult" style="margin-top: 10px;"></div>
+</div>
+
+<script>
+document.getElementById('removeUserForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // 阻止表单默认提交行为
+
+    const userId = document.getElementById('user_id').value;
+    const formData = new FormData(this);
+
+    if (!userId) {
+        document.getElementById('removeResult').textContent = '请输入用户ID';
+        document.getElementById('removeResult').style.color = 'red';
+        return;
+    }
+
+    fetch('/remove_user2', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('removeResult').textContent = '删除成功';
+            document.getElementById('removeResult').style.color = 'green';
+        } else {
+            document.getElementById('removeResult').textContent = '删除失败: ' + data.message;
+            document.getElementById('removeResult').style.color = 'red';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('removeResult').textContent = '删除失败: ' + error;
+        document.getElementById('removeResult').style.color = 'red';
+    });
+});
+</script>

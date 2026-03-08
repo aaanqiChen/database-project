@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Admin Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-image: url('{{ url_for("static", filename="admin_1.png") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-attachment: fixed; /* 关键属性 */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+        }
+
+        .header h1 {
+            font-family: 'Brush Script MT', cursive; /* 艺术体 */
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .menu {
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .menu button:hover {
+            background-color: #45a049;
+        }
+
+        .panel {
+            flex: 1;
+            margin-left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-item label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .info-item span {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>图书馆</h1>
+        <p>管理员</p>
+    </div>
+    <div class="container">
+        <div class="menu">
+            <button onclick="loadContent('user-management')">用户管理</button>
+            <button onclick="loadContent('book-management')">图书管理</button>
+            <button onclick="loadContent('borrow-management')">借阅管理</button>
+            <button onclick="loadContent('fine-management')">罚款管理</button>
+            <button onclick="loadContent('statistics')">统计与报表</button>
+            <button onclick="loadContent('logs')">日志与管理</button>
+            <button onclick="loadContent('advanced-query')">高级查询筛选</button>
+        </div>
+        <div class="panel" id="contentArea">
+            <div class="info-item">
+                <label for="username">用户名：</label>
+                <span id="username">{{ username }}</span>
+            </div>
+            <div class="info-item">
+                <label for="level">等级：</label>
+                <span id="level">超级管理员</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function loadContent(page) {
+            if (!page) {
+                console.error('Invalid page parameter');
+                return;
+            }
+            $.get(`/${page}`, function(data) {
+                $('#contentArea').html(data);
+            });
+        }
+
+        // 示例：直接加载图书管理页面
+        $(document).ready(function() {
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<div class="reader_query_author">
+    <h3>按作者查</h3>
+    <form id="author-search-form">
+        <label for="authorName">作者：</label>
+        <input type="text" id="authorName" name="authorName"><br>
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="author-search-result"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#author-search-form').on('submit', function (e) {
+            e.preventDefault();
+            var authorName = $('#authorName').val();
+
+            $.post('/search_author', { authorName: authorName }, function (data) {
+                $('#author-search-result').html(data);
+            });
+        });
+    });
+</script>

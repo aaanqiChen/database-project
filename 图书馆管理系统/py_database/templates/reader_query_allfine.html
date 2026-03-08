@@ -1,0 +1,24 @@
+<div class="all_fine">
+    <h3>查询所有罚款</h3>
+    <form id="all_fine_form">
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="fine_result"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // 处理查询所有罚款记录的请求
+        $('#all_fine_form').on('submit', function (e) {
+            e.preventDefault(); // 阻止表单的默认提交行为
+
+            // 发送AJAX请求到后端
+            $.post('/get_all_fines', function (data) {
+                $('#fine_result').html(data); // 将返回的数据显示在结果区域
+            }).fail(function () {
+                alert('请求失败，请重试。'); // 错误处理
+            });
+        });
+    });
+</script>

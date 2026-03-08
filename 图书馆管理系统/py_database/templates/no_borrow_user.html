@@ -1,0 +1,24 @@
+<div class="no_borrow_user">
+    <h3>查询所有未借书的用户</h3>
+    <form id="no-borrow-form">
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="users_result"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // 处理查询所有未借书的用户
+        $('#no-borrow-form').on('submit', function (e) {
+            e.preventDefault(); // 阻止表单的默认提交行为
+
+            // 发送AJAX请求到后端
+            $.post('/search_no_borrow_users', function (data) {
+                $('#users_result').html(data); // 将返回的数据显示在结果区域
+            }).fail(function () {
+                alert('请求失败，请重试。'); // 错误处理
+            });
+        });
+    });
+</script>

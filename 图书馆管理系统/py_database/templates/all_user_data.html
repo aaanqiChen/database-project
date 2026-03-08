@@ -1,0 +1,24 @@
+<div class="all_users">
+    <h3>查看所有用户</h3>
+    <form id="all-users-form">
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="users_result"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // 处理查看所有用户的请求
+        $('#all-users-form').on('submit', function (e) {
+            e.preventDefault(); // 阻止表单的默认提交行为
+
+            // 发送AJAX请求到后端
+            $.post('/get_all_users', function (data) {
+                $('#users_result').html(data); // 将返回的数据显示在结果区域
+            }).fail(function () {
+                alert('请求失败，请重试。'); // 错误处理
+            });
+        });
+    });
+</script>

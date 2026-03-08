@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Reader Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-image: url('{{ url_for("static", filename="reader_1.png") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-attachment: fixed; /* 关键属性 */
+        }
+
+        .header {
+            text-align: center;
+            font-family: 'Brush Script MT', cursive; /* 艺术体 */
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .menu {
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .menu button:hover {
+            background-color: #45a049;
+        }
+
+        .panel {
+            flex: 1;
+            margin-left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-item label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .info-item textarea {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            height: 100px;
+            resize: vertical; /* 允许垂直调整大小 */
+        }
+
+        .button-group {
+            margin-top: 15px;
+        }
+
+        .button-group button {
+            padding: 8px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button-group button[type="button"] {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .button-group button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .button-group button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">奇迹图书馆</div>
+    <div class="container">
+        <div class="menu">
+            <button onclick="loadContent('reader_query_book')">图书检索</button>
+            <button onclick="loadBorrowRecords()">借阅记录</button>
+            <button onclick="loadContent('reader_query_fine')">罚款记录</button>
+        </div>
+       <div class="panel" id="contentArea">
+            <div class="info-item">
+                <label for="user_id">用户id：</label>
+                <span id="user_id">{{ user_id }}</span>
+            </div>
+            <div class="info-item">
+                <label for="username">用户名：</label>
+                <span id="username">{{ username }}</span>
+            </div>
+            <div class="info-item">
+                <label for="bio">简介：</label>
+                <textarea id="bio" name="bio" disabled>{{ bio }}</textarea>
+                <div class="button-group">
+                    <button type="button" onclick="editBio()">编辑</button>
+                    <button type="submit" onclick="saveBio()">确定</button>
+                </div>
+            </div>
+            <div class="info-item">
+                <label for="books-available">可借书籍数目：</label>
+                <span id="books-available">{{ books_available }}</span>
+            </div>
+            <div class="info-item">
+                <label for="credit-record">信用记录：</label>
+                <span id="credit-record">{{ credit_record }}</span>
+            </div>
+            <!-- 插入借阅记录容器 -->
+            <div id="borrowRecordsContainer">
+                <!-- 借阅记录将在这里插入 -->
+            </div>
+       </div>
+       <div id="search_fine">
+            <!-- 借阅记录将在这里插入 -->
+       </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function loadContent(page) {
+            if (!page) {
+                console.error('Invalid page parameter');
+                return;
+            }
+            $.get(`/${page}`, function(data) {
+                $('#contentArea').html(data);
+
+            });
+        }
+        function loadContent2(page) {
+            if (!page) {
+                console.error('Invalid page parameter');
+                return;
+            }
+
+            $.post('/fine_query',  function (data) {
+                $('#search-fine').html(data);
+            });
+        }
+        function loadBorrowRecords() {
+            // 发送GET请求到后端API
+            $.ajax({
+                url: '/borrow_query',
+                type: 'GET',
+                data: {
+                },
+                success: function(response) {
+                    // 直接将返回的HTML插入到容器中
+                    $('#borrowRecordsContainer').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching borrow records:', error);
+                    alert('获取借阅记录失败');
+                }
+            });
+        }
+        function returnBook(borrowId) {
+            if (!confirm('确定要归还这本书吗？')) {
+                return;
+            }
+
+           $.ajax({
+            url: '/return_book',
+            type: 'POST',
+            data: {
+                borrow_id: borrowId
+            },
+            success: function(response) {
+                // 显示消息框
+                showMessage(response.message, 5000);
+                // 重新加载借阅记录
+                loadBorrowRecords();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error returning book:', error);
+                showMessage('归还失败，请重试', 5000);
+            }
+        });
+        }
+
+        function showMessage(message, duration) {
+            // 创建一个模态框
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.zIndex = '1000';
+            modal.style.left = '50%';
+            modal.style.top = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.padding = '20px';
+            modal.style.backgroundColor = 'white';
+            modal.style.border = '1px solid #ccc';
+            modal.style.borderRadius = '5px';
+            modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
+            modal.innerHTML = `<p>${message}</p>`;
+
+            // 添加到body
+            document.body.appendChild(modal);
+
+            // 设置定时器自动关闭
+            setTimeout(() => {
+                document.body.removeChild(modal);
+            }, duration);
+        }
+
+
+        // 示例：直接加载图书管理页面
+        $(document).ready(function() {
+
+        });
+        function editBio() {
+            const bioTextarea = document.getElementById('bio');
+            bioTextarea.disabled = false;
+        }
+
+        function saveBio() {
+            const bioTextarea = document.getElementById('bio');
+            const userId = document.getElementById('user_id').textContent; // 获取用户ID
+            const bioContent = bioTextarea.value;
+
+            // 发送AJAX请求到后端
+            $.ajax({
+                url: '/update_bio', // 后端处理更新的路由
+                type: 'POST',
+                data: {
+                    user_id: userId,
+                    bio: bioContent
+                },
+                success: function(response) {
+                    alert('简介已保存');
+                    bioTextarea.disabled = true;
+                },
+                error: function(xhr, status, error) {
+                    console.error('保存失败:', error);
+                    alert('保存失败，请重试');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<h2>Book Results</h2>
+{% for book in books %}
+    <div class="book-item">
+        <p>书名: {{ book.book_name }}
+            <br>作者名: {{ book.name }}
+            <button onclick="promptUserId({{ book.book_id }})">借阅</button>
+            <button onclick="toggleDetails({{ loop.index0 }})">详情</button>
+        </p>
+        <div id="book-details-{{ loop.index0 }}" class="book-details" style="display:none;">
+            <p>出版社: {{ book.publisher }}
+                <br>出版日期: {{ book.publish_date }}
+                <br>价格: {{ book.price }}
+                <br>存量: {{ book.stock }}
+                <br>借阅热度: {{ book.borrow_hot }}
+                <br>所在书架: {{ book.bookcase_id }}
+                <br>语言: {{ book.language }}
+                <br>总量: {{ book.total_amount }}
+                <br>简介: {{ book.brief_intro }}
+                <br>所属类名: {{ book.cate_name }}
+            </p>
+        </div>
+    </div>
+{% endfor %}
+
+<script>
+function toggleDetails(index) {
+    var details = document.getElementById('book-details-' + index);
+    if (details.style.display === "none") {
+        details.style.display = "block";
+    } else {
+        details.style.display = "none";
+    }
+}
+
+function promptUserId(bookId) {
+    const userId = prompt('请输入您的用户ID：');
+    if (userId !== null) {
+        borrowBook(bookId, userId);
+    }
+}
+
+function borrowBook(bookId, userId) {
+    fetch(`/borrow_book?book_id=${bookId}&user_id=${userId}`)
+        .then(response => response.text())
+        .then(data => {
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = data;
+            document.body.appendChild(messageElement);
+
+            setTimeout(() => {
+                messageElement.remove();
+            }, 5000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
+<style>
+.book-item {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.book-details {
+    margin-top: 10px;
+    padding-left: 20px;
+    border-left: 2px solid #eee;
+}
+</style>

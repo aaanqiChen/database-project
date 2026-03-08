@@ -1,0 +1,22 @@
+<div class="reader_query_nabook">
+    <h3>按书名查</h3>
+    <form id="book-search-form">
+        <label for="bookTitle">书名：</label>
+        <input type="text" id="bookTitle" name="bookTitle"><br>
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="search-result"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#book-search-form').on('submit', function (e) {
+            e.preventDefault();
+            var bookTitle = $('#bookTitle').val();
+
+            $.post('/search_nabook', { bookTitle: bookTitle }, function (data) {
+                $('#search-result').html(data);
+            });
+        });
+    });
+</script>

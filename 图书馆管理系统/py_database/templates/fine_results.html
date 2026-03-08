@@ -1,0 +1,12 @@
+<div class="fine_results">
+    <h2>罚款记录</h2>
+    <ul id="fine-list">
+        {% for record in fine_results %}
+        <li>
+            <span>借阅ID: {{ record.borrow_id }} </span>
+            <span>罚款金额: {{ record.fine_amount }} </span>
+            <span>交款状态: {{ record.state }} </span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

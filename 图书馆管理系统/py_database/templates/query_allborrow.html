@@ -1,0 +1,36 @@
+<div class="query_allborrow">
+    <h3>查询所有借阅记录</h3>
+    <form id="query_allborrow_form">
+        <!-- 可以添加筛选条件，例如按日期范围 -->
+        <label for="startDate">开始日期：</label>
+        <input type="date" id="startDate" name="startDate">
+        <label for="endDate">结束日期：</label>
+        <input type="date" id="endDate" name="endDate"><br>
+        <button type="submit">查找</button>
+    </form>
+</div>
+<div id="borrow-result"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#query_allborrow_form').on('submit', function (e) {
+            e.preventDefault();
+
+            // 收集表单数据
+            var formData = {
+                startDate: $('#startDate').val(),
+                endDate: $('#endDate').val()
+            };
+
+            // 显示加载状态
+            $('#borrow-result').html('<p>正在查询，请稍候...</p>');
+
+            // 发送AJAX请求
+            $.post('/query_allborrow', formData, function (data) {
+                $('#borrow-result').html(data);
+            }).fail(function() {
+                $('#borrow-result').html('<p class="error">查询失败，请稍后再试。</p>');
+            });
+        });
+    });
+</script>
